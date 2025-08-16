@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS vehicles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    "year" INTEGER NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+); 
