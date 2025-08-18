@@ -39,12 +39,12 @@ public class VehicleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
-        Optional<Vehicle> vehicleOpt = vehicleService.getVehicleById(id);
-        return vehicleOpt.map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public Vehicle getVehicleById(@PathVariable Long id) {
+        // No need for Optional handling - exception handler will catch VehicleNotFoundException
+        return vehicleService.getVehicleById(id);
     }
 
+    // create a new vehicle
     @PostMapping
     public ResponseEntity<Vehicle> createVehicle(@Valid @RequestBody Vehicle vehicle) {
         Vehicle savedVehicle = vehicleService.saveVehicle(vehicle);
@@ -52,20 +52,18 @@ public class VehicleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Vehicle> updateVehicle(@PathVariable Long id, @Valid @RequestBody Vehicle vehicle) {
-        if(!vehicleService.getVehicleById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+    public Vehicle updateVehicle(@PathVariable Long id, @Valid @RequestBody Vehicle vehicle) {
+        // Verify vehicle exists (will throw exception if not found)
+        vehicleService.getVehicleById(id);
+        
+        // Set the ID and save
         vehicle.setId(id);
-        Vehicle updatedVehicle = vehicleService.saveVehicle(vehicle);
-        return ResponseEntity.ok(updatedVehicle);
+        return vehicleService.saveVehicle(vehicle);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
-        if(!vehicleService.getVehicleById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+        // removed check for vehicle existence because exception handler will catch VehicleNotFoundException
         vehicleService.deleteVehicle(id);
         return ResponseEntity.noContent().build();
     }
@@ -90,13 +88,18 @@ public class VehicleController {
         }
     }
 
+    // removed ResponseEntity - not needed because of the exception handler
     @PutMapping("/{id}/sell")
-    public ResponseEntity<Vehicle> markAsSold(@PathVariable Long id) {
-        try {
-            Vehicle soldVehicle = vehicleService.markAsSold(id);
-            return ResponseEntity.ok(soldVehicle);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Vehicle markAsSold(@PathVariable Long id) {
+        // No try-catch needed - removed try-catch because @ControllerAdvice handles exceptions
+        return vehicleService.markAsSold(id);
+    }
+
+    // get vehicles by status
+    @GetMapping("/status/{status}")
+    public List<Vehicle> getVehiclesByStatus(@PathVariable VehicleStatus status) {
+        return vehicleService.getAllVehicles().stream()
+            .filter(v -> v.getStatus() == status)
+            .toList();
     }
 }

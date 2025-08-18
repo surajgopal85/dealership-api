@@ -18,6 +18,4 @@ public class VehicleNotFoundException extends RuntimeException {
     public VehicleNotFoundException(String field, String value) {
         super(String.format("Vehicle with %s '%s' not found", field, value));
     }
-} {
-    
 }
