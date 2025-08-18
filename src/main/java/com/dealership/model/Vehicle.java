@@ -20,7 +20,7 @@ public class Vehicle {
     @NotBlank(message = "Model is required")
     private String model;
 
-    @Column(nullable = false)
+    @Column(name = "vehicle_year", nullable = false)
     @NotNull(message = "Year is required")
     @Min(value = 1979, message = "Year must be after 1979")
     @Max(value = 2025, message = "Year must not be in the future")
