@@ -48,6 +48,10 @@ public class CustomerInquiry {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    // NEW
+    @Version
+    private Long version;
+
     // automatically set createdAt and updatedAt on creation
     // removed infavor of @PrePersist method onCreate
     // public CustomerInquiry() {
